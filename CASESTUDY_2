@@ -1,0 +1,35 @@
+void updateRange(int node, int lo, int hi,
+                 int l, int r, int delta)
+{
+    if (lazy[node] != 0)
+        pushDown(node, lo, hi);
+
+    // No overlap
+    if (hi < l || lo > r)
+        return;
+
+    // Complete overlap
+    if (l <= lo && hi <= r)
+    {
+        tree[node] += delta;
+
+        if (lo != hi)
+        {
+            lazy[node * 2] += delta;
+            lazy[node * 2 + 1] += delta;
+        }
+
+        return;
+    }
+    int mid = (lo + hi) / 2;
+
+    updateRange(node * 2, lo, mid,
+                l, r, delta);
+
+    updateRange(node * 2 + 1, mid + 1, hi,
+                l, r, delta);
+
+    tree[node] =
+        max(tree[node * 2],
+            tree[node * 2 + 1]);
+}
